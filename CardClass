@@ -1,0 +1,80 @@
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class Card extends JButton{
+    private String id;
+    private boolean matched = false;
+    private JButton imageButton;
+    private ImageIcon image;
+
+    public void setId(String id){
+        this.id = id;
+    }
+
+    public String getId(){
+        return this.id;
+    }
+
+    public Icon displayGUI() throws IOException {
+        image = checkImage(this.getId());
+
+        return image;
+    }
+
+    private ImageIcon checkImage (String c) throws IOException {
+
+        if(c.equals("ROSE")){
+
+            return new ImageIcon(ImageIO.read(
+                    new URL("https://www.jacksonandperkins.com/images/xxl/v1780.jpg")));
+        }
+        else if(c.equals("LILY")){
+            return new ImageIcon(ImageIO.read(
+                    new URL("https://www.degroot-inc.com/wp-content/uploads/2018/06/Lily_Navona.jpg")));
+        }
+        else if(c.equals("TULIP")) {
+            return new ImageIcon(ImageIO.read(
+                    new URL("https://www.almanac.com/sites/default/files/image_nodes/tulips-multicolored.jpg")));
+        }
+        else if(c.equals("ORCHID")) {
+            return new ImageIcon(ImageIO.read(
+                    new URL("https://hgtvhome.sndimg.com/content/dam/images/hgtv/fullset/2016/2/2/0/CI_Chicago-Botanic-Garden-Phalaenopsis-hybrid.jpg.rend.hgtvcom.1280.960.suffix/1454457232847.jpeg")));
+        }
+        else if(c.equals("CARNATION")){
+            return new ImageIcon(ImageIO.read(
+                    new URL("https://images-na.ssl-images-amazon.com/images/I/61rQbi0ocAL._AC_SL1024_.jpg")));
+        }
+        else if(c.equals("FREESIA")) {
+            return new ImageIcon(ImageIO.read(
+                    new URL("http://cdn.shopify.com/s/files/1/1419/7120/products/Freesia_Double_White.SHUT.jpg?v=1571439561")));
+        }
+        else if(c.equals("HYACINTH")) {
+            return new ImageIcon(ImageIO.read(
+                    new URL("https://www.whiteflowerfarm.com/mas_assets/cache/image/6/3/b/4/25524.Jpg")));
+        }
+        else if(c.equals("DAFFODIL")){
+            return new ImageIcon(ImageIO.read(
+                    new URL("https://www.almanac.com/sites/default/files/styles/opengraph/public/image_nodes/daffodil.jpg?itok=kELb7ZSC")));
+        }
+        else if(c.equals("POPPY")){
+            return new ImageIcon(ImageIO.read(
+                    new URL("https://cdn.shopify.com/s/files/1/2954/2248/products/shutterstock_159767393_grande.jpg?v=1609879061")));
+        }
+        else {
+            return new ImageIcon(ImageIO.read(
+                    new URL("https://www.almanac.com/sites/default/files/styles/amp_metadata_content_image_min_696px_wide/public/image_nodes/sunflower-1627193_1920.jpg?itok=z0U222mG")));
+        }
+    }
+
+    public void setMatched(boolean matched){
+        this.matched = matched;
+    }
+
+    public boolean getMatched(){
+        return this.matched;
+    }
+}
