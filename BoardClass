@@ -1,0 +1,144 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+@SuppressWarnings("serial")
+public class Board extends JFrame{
+
+    long startTime = System.nanoTime();
+
+    private List<Card> cards;
+    private Card selectedCard;
+    private Card c1;
+    private Card c2;
+    private Timer t;
+
+    public Board() throws IOException {
+
+        List<Card> cardsList = new ArrayList<Card>();
+        List<String> cardVals = new ArrayList<String>();
+        Container pane = getContentPane();
+
+        cardVals.add("ROSE");
+        cardVals.add("LILY");
+        cardVals.add("TULIP");
+        cardVals.add("ORCHID");
+        cardVals.add("CARNATION");
+        cardVals.add("FREESIA");
+        cardVals.add("HYACINTH");
+        cardVals.add("DAFFODIL");
+        cardVals.add("POPPY");
+        cardVals.add("SUNFLOWER");
+        cardVals.add("ROSE");
+        cardVals.add("LILY");
+        cardVals.add("TULIP");
+        cardVals.add("ORCHID");
+        cardVals.add("CARNATION");
+        cardVals.add("FREESIA");
+        cardVals.add("HYACINTH");
+        cardVals.add("DAFFODIL");
+        cardVals.add("POPPY");
+        cardVals.add("SUNFLOWER");
+
+        Collections.shuffle(cardVals);
+
+        for (String val : cardVals){
+            Card c = new Card();
+            c.setId(val);
+            c.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent ae){
+                    selectedCard = c;
+                    try {
+                        doTurn(pane);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            cardsList.add(c);
+        }
+        this.cards = cardsList;
+
+        //set up the timer
+        t = new Timer(750, new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                checkCards();
+            }
+        });
+
+        t.setRepeats(false);
+
+        //set up the board itself
+        pane.setLayout(new GridLayout(4, 5));
+        for (Card c : cards){
+            pane.add(c);
+        }
+
+        setTitle("Plant Memory Match");
+    }
+
+    public void doTurn(Container p) throws IOException {
+
+        if (c1 == null && c2 == null){
+            c1 = selectedCard;
+            c1.setText(String.valueOf(c1.getId()));
+            c1.setIcon(resizeIcon((ImageIcon) c1.displayGUI(), p.getWidth()/10, p.getHeight()/10));
+        }
+
+        if (c1 != null && c1 != selectedCard && c2 == null){
+            c2 = selectedCard;
+            c2.setText(String.valueOf(c2.getId()));
+            c2.setIcon(resizeIcon((ImageIcon) c2.displayGUI(), p.getWidth()/10, p.getHeight()/10));
+            t.start();
+        }
+    }
+
+    private static Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
+        Image img = icon.getImage();
+        Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight,  java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
+    }
+
+    public void checkCards(){
+        if (c1.getId() == c2.getId()){//match condition
+            c1.setEnabled(false); //disables the button
+            c2.setEnabled(false);
+            c1.setMatched(true); //flags the button as having been matched
+            c2.setMatched(true);
+
+            if (this.isGameWon()){
+
+                long duration = System.nanoTime() - startTime;
+
+                long seconds = duration / 1000000000;
+
+                JOptionPane.showMessageDialog(this, "You won in " + seconds + " seconds!");
+                System.exit(0);
+            }
+        }
+
+        else{
+            c1.setText(""); //'hides' text
+            c1.setIcon(null); //'hides' pictures
+            c2.setText("");
+            c2.setIcon(null);
+        }
+        c1 = null; //reset c1 and c2
+        c2 = null;
+    }
+
+    public boolean isGameWon(){
+        for(Card c: this.cards){
+            if (c.getMatched() == false){
+                return false;
+            }
+        }
+        return true;
+    }
+
+}
